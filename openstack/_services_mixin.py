@@ -21,6 +21,7 @@ from openstack.network import network_service
 from openstack.object_store import object_store_service
 from openstack.orchestration import orchestration_service
 from openstack.placement import placement_service
+from openstack.reservation import reservation_service
 from openstack.shared_file_system import shared_file_system_service
 from openstack.workflow import workflow_service
 
@@ -173,8 +174,8 @@ class ServicesMixin:
     )
     ha = instance_ha
 
-    reservation = service_description.ServiceDescription(
-        service_type='reservation'
+    reservation = reservation_service.ReservationService(
+        service_type="reservation"
     )
 
     function_engine = service_description.ServiceDescription(
