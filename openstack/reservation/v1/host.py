@@ -1,12 +1,5 @@
-# Apache 2 header omitted for brevity
-
 from openstack import resource
-
-
-class Lease(resource.Resource):
-    resource_key = "lease"
-    resources_key = "leases"
-    base_path = "/leases"
+from openstack.reservation.v1.common import Reservation
 
 
 class Host(resource.Resource):
@@ -38,5 +31,22 @@ class Host(resource.Resource):
     extra_capability = resource.Body("extra_capability")
 
 
-class Allocation(resource.Resource):
-    pass
+class HostAllocation(resource.Resource):
+    resource_key = "allocation"
+    resources_key = "allocations"
+    base_path = "/os-hosts/allocations"
+
+    allow_create = True
+    allow_fetch = True
+    allow_delete = True
+    allow_list = True
+    allow_head = True
+    allow_commit = False
+
+    resource_id = resource.Body("resource_id", alternate_id=True)
+    reservations = resource.Body(
+        "reservations",
+        type=list,
+        list_type=Reservation,
+        default=[],
+    )
