@@ -1,7 +1,5 @@
 from openstack import resource
 from openstack.reservation.v1.common import (
-    FloatingIPReservation,
-    HostReservation,
     Reservation,
 )
 
@@ -25,12 +23,13 @@ class Lease(resource.Resource):
     resources_key = "leases"
     base_path = "/leases"
 
-    allow_create = True
-    allow_fetch = True
-    allow_delete = True
-    allow_list = True
-    allow_head = True
-    allow_commit = False
+    allow_create = True  # POST to /leases
+    allow_fetch = True  # GET to /leases/{lease_id}
+    allow_delete = True  # DELETE to /leases/{lease_id}
+    allow_list = True  # GET to /leases
+    allow_commit = True  # PUT to /leases/{lease_id}
+    allow_head = False  # not used in API
+    allow_patch = False  # PUT is used instead
 
     id = resource.Body("id")
     name = resource.Body("name")
@@ -44,7 +43,12 @@ class Lease(resource.Resource):
     created_at = resource.Body("created_at")
     updated_at = resource.Body("updated_at")
 
-    reservations = resource.Body("reservations", type=list)
+    reservations = resource.Body(
+        "reservations",
+        type=list,
+        list_type=Reservation,
+        default=[],
+    )
 
     events = resource.Body(
         "events",

@@ -9,17 +9,26 @@ class Proxy(proxy.Proxy):
         "lease": lease.Lease,
     }
 
+    def get_lease(self, lease_id):
+        return self._get(lease.Lease, lease_id)
+
     def leases(self, **query):
         """Retrieve a generator of leases."""
 
-        return lease.Lease.list(self, **query)
+        return self._list(lease.Lease, **query)
+
+    def get_allocation_for_host(self, host_id):
+        return self._get(host.HostAllocation, id=host_id)
 
     def allocations(self, **query):
         """Retrieve a generator of allocations."""
 
-        return host.HostAllocation.list(self, **query)
+        return self._list(host.HostAllocation, **query)
+
+    def get_host(self, host_id):
+        return self._get(host.Host, host_id)
 
     def hosts(self, **query):
         """Retrieve a generator of reservation hosts."""
 
-        return host.Host.list(self, **query)
+        return self._list(host.Host, **query)

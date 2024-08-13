@@ -1,5 +1,3 @@
-import ast
-
 from openstack import resource
 
 
@@ -18,6 +16,11 @@ class Reservation(resource.Resource):
     updated_at = resource.Body("updated_at")
 
     resource_type = resource.Body("resource_type")
+
+    # each blazar plugin defines a new type of reservation object,
+    # which may have additional fields. Store those extra fields under "properties"
+    properties = resource.Body("properties")
+    _store_unknown_attrs_as_properties = True
 
 
 class HostReservation(Reservation):
