@@ -1,5 +1,5 @@
 from openstack import exceptions, proxy
-from openstack.reservation.v1 import floatingip, host, lease, network
+from openstack.reservation.v1 import device, floatingip, host, lease, network
 
 
 class Proxy(proxy.Proxy):
@@ -67,3 +67,28 @@ class Proxy(proxy.Proxy):
 
     def network_properties(self, **query):
         return self._list(network.NetworkProperty, **query)
+
+    ## CHI@Edge Devices
+
+    # Baremetal Hosts
+
+    def get_device(self, device_id):
+        return self._get(device.Device, device_id)
+
+    def devices(self, **query):
+        """Retrieve a generator of reservation devices."""
+
+        return self._list(device.Device, **query)
+
+    # device allocations
+    def get_allocation_for_device(self, device_id):
+        return self._get(device.DeviceAllocation, id=device_id)
+
+    def device_allocations(self, **query):
+        """Retrieve a generator of allocations."""
+        return self._list(device.DeviceAllocation, **query)
+
+    # device properties
+
+    def device_properties(self, **query):
+        return self._list(device.DeviceProperty, **query)
