@@ -1,6 +1,18 @@
 from openstack import resource
 
 
+class AllocReservation(resource.Resource):
+    """Class for the reservation object returned by blazar's allocations API.
+
+    This is a small and incomplete subset of the reservations returned via the lease API
+    """
+
+    id = resource.Body("id")
+    lease_id = resource.Body("lease_id")
+    start_date = resource.Body("start_date")
+    end_date = resource.Body("end_date")
+
+
 class Reservation(resource.Resource):
     """Blazar reservation object.
     Can only be fetched as part of lease or allocation queries.

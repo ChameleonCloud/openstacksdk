@@ -1,16 +1,5 @@
 from openstack import exceptions, resource, utils
-
-
-class HostAllocReservation(resource.Resource):
-    """Class for the reservation object returned by blazar's allocations API.
-
-    This is a small and incomplete subset of the reservations returned via the lease API
-    """
-
-    id = resource.Body("id")
-    lease_id = resource.Body("lease_id")
-    start_date = resource.Body("start_date")
-    end_date = resource.Body("end_date")
+from openstack.reservation.v1.common import AllocReservation
 
 
 class Host(resource.Resource):
@@ -51,7 +40,7 @@ class Host(resource.Resource):
     reservations = resource.Computed(
         "reservations",
         type=list,
-        list_type=HostAllocReservation,
+        list_type=AllocReservation,
         default=[],
     )
 
@@ -77,16 +66,11 @@ class HostAllocation(resource.Resource):
     allow_list = True  # GET to v1/os-hosts/allocations
     allow_fetch = True  # GET to v1/os-hosts/{host_id}/allocation, this is under host object instead
 
-    allow_commit = False
-    allow_delete = False
-    allow_create = False
-    allow_head = False
-
     resource_id = resource.Body("resource_id", alternate_id=True)
     reservations = resource.Body(
         "reservations",
         type=list,
-        list_type=HostAllocReservation,
+        list_type=AllocReservation,
         default=[],
     )
 
@@ -97,3 +81,24 @@ class HostAllocation(resource.Resource):
             requires_id=False,
             base_path=url,
         )
+
+
+class HostProperty(resource.Resource):
+    resource_key = "resource_property"
+    resources_key = "resource_properties"
+    base_path = "/os-hosts/properties"
+
+    allow_list = True  # GET to v1/os-hosts/properties
+    allow_patch = True  # PATCH to v1/os-hosts/properties/{property_name}
+
+    _query_mapping = resource.QueryParameters(
+        "detail",
+        "all",
+    )
+
+    property = resource.Body("property", alternate_id=True)
+    private = resource.Body("private")
+    values = resource.Body("values")
+
+    properties = resource.Body("properties")
+    _store_unknown_attrs_as_properties = True
