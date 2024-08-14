@@ -4,9 +4,19 @@ from openstack.reservation.v1 import device, floatingip, host, lease, network
 
 class Proxy(proxy.Proxy):
     _resource_registry = {
-        "host": host.Host,
-        "allocation": host.HostAllocation,
         "lease": lease.Lease,
+        "host": host.Host,
+        "host_allocation": host.HostAllocation,
+        "host_property": host.HostProperty,
+        "device": device.Device,
+        "device_allocation": device.DeviceAllocation,
+        "device_property": device.DeviceProperty,
+        "floatingip": floatingip.FloatingIP,
+        # "floatingip_allocation": floatingip.FloatingipAllocation, # not defined
+        # "floatingip_property": floatingip.FloatingipProperty,     # not defined
+        "network": network.Network,
+        "network_allocation": network.NetworkAllocation,
+        "network_property": network.NetworkProperty,
     }
 
     # Leases
@@ -23,6 +33,11 @@ class Proxy(proxy.Proxy):
 
     def get_host(self, host_id):
         return self._get(host.Host, host_id)
+
+    def get_host_with_reservations(self, host_id):
+        blazar_host = self.get_host(host_id=host_id)
+        host_with_res = blazar_host.get_host_with_reservations()
+        return host_with_res
 
     def hosts(self, **query):
         """Retrieve a generator of reservation hosts."""
